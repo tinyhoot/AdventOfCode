@@ -4,8 +4,10 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
+from time import time
 
-from utils import api, constants
+from utils import constants
+from utils.api import APIHandler
 from utils.errors import ImpatientError
 
 PUZZLE_INPUT_FILENAME = "puzzle_input.txt"
@@ -23,6 +25,10 @@ def get_base_dir() -> Path:
     # Hardcoded and relies on a specific file structure, but that's fine.
     this_file = Path(os.path.realpath(__file__))
     return this_file.parent.parent
+
+
+def get_cache_dir() -> Path:
+    return get_base_dir() / constants.CACHE_DIR
 
 
 def get_day_dir(year: int, day: int) -> Path:
@@ -43,8 +49,8 @@ def get_puzzle_input(year: int, day: int) -> str:
 
     if not puzzle_file.exists():
         _log.warning(f"No puzzle file found for {year}-{day}, downloading.")
-        cookie = get_session_cookie()
-        data = api.get_puzzle_input(year, day, cookie)
+        api_handler = APIHandler(get_session_cookie())
+        data = api_handler.get_puzzle_input(year, day)
         save_puzzle_input(data, year, day)
 
     with open(puzzle_file, "r", encoding="utf-8") as file:
@@ -70,6 +76,31 @@ def _get_session_cookie_file() -> Path:
     return cookie_file
 
 
+def _load_cache(url: str) -> str | None:
+    path = _url_to_filename(url)
+    cached_files = sorted(path.parent.glob(f"{path.name}-*"), reverse=True, key=lambda x: int(x.split("-")[1]))
+    if not cached_files:
+        _log.info(f"Found no cache for {path}")
+        return None
+
+    # Load only the latest file.
+    with open(cached_files[0], "r", encoding="utf-8") as file:
+        data = file.read()
+    return data
+
+
+def _save_cache(data, url: str):
+    path = _url_to_filename(url)
+    # Add a timestamp.
+    timestamp = int(time())
+    path = path.with_name(f"{path.name}-{timestamp}")
+
+    get_cache_dir().mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as file:
+        file.write(data)
+        _log.info(f"Wrote cache to disk at {path.name}")
+
+
 def save_puzzle_input(data, year: int, day: int):
     dir_path = get_day_dir(year, day)
     file_path = dir_path / PUZZLE_INPUT_FILENAME
@@ -78,3 +109,11 @@ def save_puzzle_input(data, year: int, day: int):
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(data)
     _log.info(f"Saved puzzle input to disk for {year}-{day}")
+
+
+def _url_to_filename(url: str) -> Path:
+    # Drop the domain.
+    idx = url.find(".com/")
+    url = url[idx + 5:]
+    filename = url.replace('/', '_')
+    return get_cache_dir() / filename
