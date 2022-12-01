@@ -13,6 +13,32 @@ $ python3 2022/01/solution.py
 
 ## Progress
 
-| Day | Time Taken | Stars |
-|:---:|:----------:|:-----:|
-| 01  |     8h     |  **   |
+| Day | Time to Solution |   Stars   |
+|:---:|:----------------:|:---------:|
+| [01](https://adventofcode.com/2022/day/1) | 03:09:28 | ✨✨ |
+| [02](https://adventofcode.com/2022/day/2) | N/A | - |
+| [03](https://adventofcode.com/2022/day/3) | N/A | - |
+| [04](https://adventofcode.com/2022/day/4) | N/A | - |
+| [05](https://adventofcode.com/2022/day/5) | N/A | - |
+| [06](https://adventofcode.com/2022/day/6) | N/A | - |
+| [07](https://adventofcode.com/2022/day/7) | N/A | - |
+| [08](https://adventofcode.com/2022/day/8) | N/A | - |
+| [09](https://adventofcode.com/2022/day/9) | N/A | - |
+| [10](https://adventofcode.com/2022/day/10) | N/A | - |
+| [11](https://adventofcode.com/2022/day/11) | N/A | - |
+| [12](https://adventofcode.com/2022/day/12) | N/A | - |
+| [13](https://adventofcode.com/2022/day/13) | N/A | - |
+| [14](https://adventofcode.com/2022/day/14) | N/A | - |
+| [15](https://adventofcode.com/2022/day/15) | N/A | - |
+| [16](https://adventofcode.com/2022/day/16) | N/A | - |
+| [17](https://adventofcode.com/2022/day/17) | N/A | - |
+| [18](https://adventofcode.com/2022/day/18) | N/A | - |
+| [19](https://adventofcode.com/2022/day/19) | N/A | - |
+| [20](https://adventofcode.com/2022/day/20) | N/A | - |
+| [21](https://adventofcode.com/2022/day/21) | N/A | - |
+| [22](https://adventofcode.com/2022/day/22) | N/A | - |
+| [23](https://adventofcode.com/2022/day/23) | N/A | - |
+| [24](https://adventofcode.com/2022/day/24) | N/A | - |
+| [25](https://adventofcode.com/2022/day/25) | N/A | - |
+
+<!--- EndProgress -->

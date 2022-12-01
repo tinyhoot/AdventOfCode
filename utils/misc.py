@@ -17,7 +17,7 @@ def ts_to_hours(timestamp: int, other_time: int) -> str:
 
     mins, secs = divmod(diff, 60)
     hrs, mins = divmod(mins, 60)
-    return f"{hrs}:{mins}:{secs}"
+    return f"{hrs:02}:{mins:02}:{secs:02}"
 
 
 def unix_now() -> int:
