@@ -66,11 +66,13 @@ class Solution(metaclass=ABCMeta):
 
         match part:
             case 1:
-                self.part1(data)
+                output = self.part1(data)
             case 2:
-                self.part2(data)
+                output = self.part2(data)
             case _:
                 raise ValueError(f"Invalid part number: {part}")
+
+        print(output)
 
 
 if __name__ == "__main__":
