@@ -2,6 +2,7 @@
 import inspect
 import logging
 import os
+import sys
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
 
@@ -10,23 +11,18 @@ from utils import constants, filehandler
 
 class Solution(metaclass=ABCMeta):
 
-    TEST_DATA = None
-
     def __init__(self):
         self._log = logging.getLogger(constants.ROOT_LOGGER)
         self._log.setLevel(logging.DEBUG)
-        handler = logging.StreamHandler()
+        handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter("{levelname}:{name}:{message}", style="{"))
         self._log.addHandler(handler)
 
     def _get_data(self, test_data: bool = True) -> str:
+        year, day = self._get_day()
         if test_data:
-            if "TEST_DATA" in dir(self) and self.TEST_DATA:
-                return self.TEST_DATA
-            else:
-                raise AttributeError(f"No testing data was defined!")
+            return filehandler.get_test_input(year, day)
         else:
-            year, day = self._get_day()
             return filehandler.get_puzzle_input(year, day)
 
     def _get_day(self) -> (int, int):
@@ -60,19 +56,14 @@ class Solution(metaclass=ABCMeta):
     def part2(self, data):
         raise NotImplementedError
 
-    def solve(self, part: int, testing: bool = True):
+    def solve(self, testing: bool = True):
         raw = self._get_data(testing)
         data = self.parse(raw)
 
-        match part:
-            case 1:
-                output = self.part1(data)
-            case 2:
-                output = self.part2(data)
-            case _:
-                raise ValueError(f"Invalid part number: {part}")
-
-        print(output)
+        self._log.info("---------- PART 1 OUTPUT ----------")
+        print(self.part1(data))
+        self._log.info("---------- PART 2 OUTPUT ----------")
+        print(self.part2(data))
 
 
 if __name__ == "__main__":

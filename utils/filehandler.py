@@ -9,6 +9,7 @@ from utils.api import APIHandler
 from utils.errors import ImpatientError
 
 PUZZLE_INPUT_FILENAME = "puzzle_input.txt"
+TEST_INPUT_FILENAME = "test_input.txt"
 SESSION_COOKIE_FILENAME = "session_cookie"
 _log = logging.getLogger(constants.ROOT_LOGGER + "." + __name__)
 
@@ -49,6 +50,18 @@ def get_puzzle_input(year: int, day: int) -> str:
         save_puzzle_input(data, year, day)
 
     return data
+
+
+def get_test_input(year: int, day: int) -> str:
+    """Get the testing input for a specific day."""
+    test_file = get_day_dir(year, day) / TEST_INPUT_FILENAME
+    _log.info(f"Grabbing test input from file: {test_file}")
+    if test_file.exists():
+        with open(test_file, "r", encoding="utf-8") as file:
+            data = file.read()
+        return data
+    else:
+        raise FileNotFoundError(f"Failed to find test input file at {test_file}")
 
 
 def get_session_cookie() -> str:

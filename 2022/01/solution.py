@@ -3,8 +3,6 @@ from utils.solution import Solution
 
 class Day01Solution(Solution):
 
-    TEST_DATA = "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000"
-
     def parse(self, raw: str) -> list[list[int]]:
         elves = []
         for elf in raw.rstrip("\n").split("\n\n"):
@@ -27,4 +25,4 @@ class Day01Solution(Solution):
 
 if __name__ == "__main__":
     solution = Day01Solution()
-    solution.solve(2, False)
+    solution.solve(False)
