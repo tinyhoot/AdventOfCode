@@ -14,7 +14,7 @@ class APIHandler:
         self.session_cookie = session_cookie
 
     def get_leaderboard(self, year: int) -> str:
-        url = constants.LEADERBOARD_URL.format(year)
+        url = constants.LEADERBOARD_URL.format(year, constants.USER_ID)
         _log.info(f"Requesting leaderboard stats from {url}")
         return self._request_response(url)
 

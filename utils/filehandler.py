@@ -4,7 +4,7 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from time import time
+import time
 
 from utils import constants
 from utils.api import APIHandler
@@ -47,6 +47,7 @@ def get_puzzle_input(year: int, day: int) -> str:
     puzzle_file = get_day_dir(year, day) / PUZZLE_INPUT_FILENAME
     _log.info(f"Grabbing puzzle input from file: {puzzle_file}")
 
+    # TODO: Restructure
     if not puzzle_file.exists():
         _log.warning(f"No puzzle file found for {year}-{day}, downloading.")
         api_handler = APIHandler(get_session_cookie())
@@ -76,23 +77,24 @@ def _get_session_cookie_file() -> Path:
     return cookie_file
 
 
-def _load_cache(url: str) -> str | None:
+def load_cache(url: str) -> tuple[str, int] | tuple[None, None]:
     path = _url_to_filename(url)
-    cached_files = sorted(path.parent.glob(f"{path.name}-*"), reverse=True, key=lambda x: int(x.split("-")[1]))
+    cached_files = sorted(path.parent.glob(f"{path.name}-*"), reverse=True, key=lambda x: int(x.name.split("-")[1]))
     if not cached_files:
         _log.info(f"Found no cache for {path}")
-        return None
+        return None, None
 
     # Load only the latest file.
     with open(cached_files[0], "r", encoding="utf-8") as file:
         data = file.read()
-    return data
+    timestamp = int(cached_files[0].name.split("-")[1])
+    return data, timestamp
 
 
-def _save_cache(data, url: str):
+def save_cache(data, url: str):
     path = _url_to_filename(url)
     # Add a timestamp.
-    timestamp = int(time())
+    timestamp = int(time.time())
     path = path.with_name(f"{path.name}-{timestamp}")
 
     get_cache_dir().mkdir(parents=True, exist_ok=True)
