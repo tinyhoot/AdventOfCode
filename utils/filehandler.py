@@ -1,23 +1,15 @@
 # Anything to do with file handling inside the project directory goes here.
-import datetime as dt
 import logging
 import os
-from datetime import datetime
 from pathlib import Path
-import time
 
-from utils import constants
+from utils import constants, misc
 from utils.api import APIHandler
 from utils.errors import ImpatientError
 
 PUZZLE_INPUT_FILENAME = "puzzle_input.txt"
 SESSION_COOKIE_FILENAME = "session_cookie"
 _log = logging.getLogger(constants.ROOT_LOGGER + "." + __name__)
-
-
-def check_date(year: int, day: int) -> dt.timedelta:
-    target = datetime(year, 12, day, 5)
-    return target - datetime.utcnow()
 
 
 def get_base_dir() -> Path:
@@ -40,22 +32,20 @@ def get_day_dir(year: int, day: int) -> Path:
 
 def get_puzzle_input(year: int, day: int) -> str:
     """Get the puzzle input for a specific day. Download it if it does not already exist."""
-    unlock_time = check_date(year, day)
-    if unlock_time.total_seconds() > 0:
-        raise ImpatientError(f"Be patient! The puzzle for {year}-12-{day} unlocks in {unlock_time}")
+    if not misc.is_unlocked(year, day):
+        raise ImpatientError(f"Be patient! The puzzle for {year}-12-{day} unlocks at 5am UTC.")
 
     puzzle_file = get_day_dir(year, day) / PUZZLE_INPUT_FILENAME
     _log.info(f"Grabbing puzzle input from file: {puzzle_file}")
 
-    # TODO: Restructure
-    if not puzzle_file.exists():
+    if puzzle_file.exists():
+        with open(puzzle_file, "r", encoding="utf-8") as file:
+            data = file.read()
+    else:
         _log.warning(f"No puzzle file found for {year}-{day}, downloading.")
         api_handler = APIHandler(get_session_cookie())
         data = api_handler.get_puzzle_input(year, day)
         save_puzzle_input(data, year, day)
-
-    with open(puzzle_file, "r", encoding="utf-8") as file:
-        data = file.read()
 
     return data
 
@@ -94,7 +84,7 @@ def load_cache(url: str) -> tuple[str, int] | tuple[None, None]:
 def save_cache(data, url: str):
     path = _url_to_filename(url)
     # Add a timestamp.
-    timestamp = int(time.time())
+    timestamp = int(misc.unix_now())
     path = path.with_name(f"{path.name}-{timestamp}")
 
     get_cache_dir().mkdir(parents=True, exist_ok=True)

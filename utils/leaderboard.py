@@ -1,8 +1,7 @@
 import json
 import logging
-import time
 
-from utils import constants, filehandler
+from utils import constants, filehandler, misc
 from utils.api import APIHandler
 
 
@@ -18,7 +17,7 @@ class Leaderboard:
         cache, timestamp = filehandler.load_cache(url)
 
         # If the cache is missing or old, redownload.
-        if cache and time.time() - timestamp <= constants.REFRESH_RATE:
+        if cache and misc.unix_now() - timestamp <= constants.REFRESH_RATE:
             data = cache
         else:
             self._log.info("Cache was old or missing, redownloading.")
@@ -35,8 +34,7 @@ class Leaderboard:
         print("yehh")
 
 
-
-
 if __name__ == "__main__":
+    logging.basicConfig()
     lb = Leaderboard(2022)
     lb.update()
