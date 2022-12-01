@@ -2,6 +2,7 @@
 import logging
 import os
 from pathlib import Path
+import re
 
 from utils import constants, misc
 from utils.api import APIHandler
@@ -104,8 +105,7 @@ def save_puzzle_input(data, year: int, day: int):
 
 
 def _url_to_filename(url: str) -> Path:
-    # Drop the domain.
-    idx = url.find(".com/")
-    url = url[idx + 5:]
-    filename = url.replace('/', '_')
+    # Drop the domain and filename, replace slashes.
+    filename = re.search(".com/(.*).json", url)[1]
+    filename = re.sub("/", "_", filename)
     return get_cache_dir() / filename

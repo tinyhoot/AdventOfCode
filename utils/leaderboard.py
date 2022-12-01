@@ -35,6 +35,5 @@ class Leaderboard:
 
 
 if __name__ == "__main__":
-    logging.basicConfig()
     lb = Leaderboard(2022)
     lb.update()
