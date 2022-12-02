@@ -16,7 +16,7 @@ $ python3 2022/01/solution.py
 | Day | Time to Solution |   Stars   |
 |:---:|:----------------:|:---------:|
 | [01](https://adventofcode.com/2022/day/1) | 03:09:28 | ✨✨ |
-| [02](https://adventofcode.com/2022/day/2) | N/A | - |
+| [02](https://adventofcode.com/2022/day/2) | 02:13:42 | ✨✨ |
 | [03](https://adventofcode.com/2022/day/3) | N/A | - |
 | [04](https://adventofcode.com/2022/day/4) | N/A | - |
 | [05](https://adventofcode.com/2022/day/5) | N/A | - |
