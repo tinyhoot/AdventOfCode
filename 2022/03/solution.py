@@ -1,7 +1,7 @@
 from utils.solution import Solution
 
 
-class DayXXSolution(Solution):
+class Day03Solution(Solution):
 
     def _char_to_num(self, char: str) -> int:
         if char.islower():
@@ -22,8 +22,8 @@ class DayXXSolution(Solution):
             comp1 = set(rucksack[:half])
             comp2 = set(rucksack[half:])
             # Use set intersection to find the common element.
-            duplicate = comp1 & comp2
-            total += self._char_to_num(duplicate.pop())
+            common = comp1 & comp2
+            total += self._char_to_num(common.pop())
 
         return total
 
@@ -32,12 +32,12 @@ class DayXXSolution(Solution):
         total = 0
         # Iterate in steps of three, get a whole group at once.
         for idx in range(0, len(data), 3):
-            dupe = set(data[idx]) & set(data[idx+1]) & set(data[idx+2])
-            total += self._char_to_num(dupe.pop())
+            common = set(data[idx]) & set(data[idx+1]) & set(data[idx+2])
+            total += self._char_to_num(common.pop())
 
         return total
 
 
 if __name__ == "__main__":
-    solution = DayXXSolution()
+    solution = Day03Solution()
     solution.solve(False)
