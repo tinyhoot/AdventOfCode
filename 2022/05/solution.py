@@ -39,6 +39,7 @@ class Day05Solution(Solution):
         return crates, moves
 
     def part1(self, data) -> str:
+        """What do the final stacks look like if moving crates one at a time?"""
         crates, moves = data
         crates = copy.deepcopy(crates)
         for move in moves:
@@ -49,6 +50,7 @@ class Day05Solution(Solution):
         return self._get_result(crates)
 
     def part2(self, data):
+        """What do the final stacks look like if moving crates all at once?"""
         crates, moves = data
         for move in moves:
             num, target, destination = move[0], move[1] - 1, move[2] - 1
