@@ -1,22 +1,16 @@
 # A base class for solutions during Advent of Code.
-import inspect
 import logging
 import os
-import sys
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
 
 from utils import constants, filehandler
 
 
-class Solution(metaclass=ABCMeta):
+class BaseSolution(metaclass=ABCMeta):
 
     def __init__(self):
-        self._log = logging.getLogger(constants.ROOT_LOGGER)
-        self._log.setLevel(logging.DEBUG)
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(logging.Formatter("{levelname}:{name}:{message}", style="{"))
-        self._log.addHandler(handler)
+        self._log = logging.getLogger(constants.ROOT_LOGGER + "." + __name__)
 
     def _get_data(self, test_data: bool = True) -> str:
         year, day = self._get_day()
@@ -27,18 +21,8 @@ class Solution(metaclass=ABCMeta):
 
     def _get_day(self) -> (int, int):
         """Get the correct year and day based on the filepath of the executing subclass."""
-        baseclass = inspect.getframeinfo(inspect.currentframe())
-        subclass = None
-        # Logically, the first caller with a different filename must be the calling subclass.
-        for caller in inspect.getouterframes(inspect.currentframe()):
-            if caller.filename != baseclass.filename:
-                subclass = caller
-                break
-        # Failsafe just to be sure we don't do any dumb stuff.
-        if not subclass or "AdventOfCode" not in subclass.filename:
-            raise FileNotFoundError("Failed to find the calling subclass!")
-
-        subclass_file = Path(os.path.realpath(subclass.filename))
+        subclass = self.__module__
+        subclass_file = Path(os.path.realpath(subclass.replace(".", "/")))
         day = int(subclass_file.parent.stem)
         year = int(subclass_file.parent.parent.stem)
 

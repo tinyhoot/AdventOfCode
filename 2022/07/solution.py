@@ -1,9 +1,9 @@
 from collections import namedtuple
 
-from utils.solution import Solution
+from utils.solution import BaseSolution
 
 
-class Day07Solution(Solution):
+class Solution(BaseSolution):
 
     def parse(self, raw: str):
         raw = raw.rstrip("\n")
@@ -103,5 +103,5 @@ class Directory:
 
 
 if __name__ == "__main__":
-    solution = Day07Solution()
+    solution = Solution()
     solution.solve(False)

@@ -1,10 +1,10 @@
 import copy
 import re
 
-from utils.solution import Solution
+from utils.solution import BaseSolution
 
 
-class Day05Solution(Solution):
+class Solution(BaseSolution):
 
     def _get_result(self, crates: list[list]) -> str:
         result = ""
@@ -62,5 +62,5 @@ class Day05Solution(Solution):
 
 
 if __name__ == "__main__":
-    solution = Day05Solution()
+    solution = Solution()
     solution.solve(False)

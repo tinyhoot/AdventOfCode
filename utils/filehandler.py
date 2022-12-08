@@ -9,6 +9,7 @@ from utils.api import APIHandler
 from utils.errors import ImpatientError
 
 PUZZLE_INPUT_FILENAME = "puzzle_input.txt"
+SOLUTION_FILENAME = "solution.py"
 TEST_INPUT_FILENAME = "test_input.txt"
 SESSION_COOKIE_FILENAME = "session_cookie"
 _log = logging.getLogger(constants.ROOT_LOGGER + "." + __name__)
@@ -32,6 +33,23 @@ def get_day_dir(year: int, day: int) -> Path:
     return get_base_dir() / year_str / day_str
 
 
+def get_latest_day(year: int) -> int:
+    """Get the latest day that exists for the given year."""
+    year_dir = get_base_dir() / str(year)
+    latest = -1
+    for child in year_dir.iterdir():
+        if child.is_dir():
+            try:
+                day = int(child.name)
+                latest = day if day > latest else latest
+            except ValueError:
+                continue
+
+    if latest == -1:
+        raise FileNotFoundError(f"No day directories exist for year {year}!")
+    return latest
+
+
 def get_puzzle_input(year: int, day: int) -> str:
     """Get the puzzle input for a specific day. Download it if it does not already exist."""
     if not misc.is_unlocked(year, day):
@@ -50,6 +68,11 @@ def get_puzzle_input(year: int, day: int) -> str:
         save_puzzle_input(data, year, day)
 
     return data
+
+
+def get_solution(year: int, day: int) -> Path:
+    """Get the solution file for a specific day."""
+    return get_day_dir(year, day) / SOLUTION_FILENAME
 
 
 def get_test_input(year: int, day: int) -> str:

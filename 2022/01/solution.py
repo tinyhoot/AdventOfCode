@@ -1,7 +1,7 @@
-from utils.solution import Solution
+from utils.solution import BaseSolution
 
 
-class Day01Solution(Solution):
+class Solution(BaseSolution):
 
     def parse(self, raw: str) -> list[list[int]]:
         elves = []
@@ -24,5 +24,5 @@ class Day01Solution(Solution):
 
 
 if __name__ == "__main__":
-    solution = Day01Solution()
+    solution = Solution()
     solution.solve(False)

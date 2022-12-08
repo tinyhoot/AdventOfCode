@@ -1,7 +1,7 @@
-from utils.solution import Solution
+from utils.solution import BaseSolution
 
 
-class Day02Solution(Solution):
+class Solution(BaseSolution):
 
     def parse(self, raw: str) -> list[list[str]]:
         raw = raw.rstrip("\n")
@@ -48,5 +48,5 @@ class Day02Solution(Solution):
 
 
 if __name__ == "__main__":
-    solution = Day02Solution()
+    solution = Solution()
     solution.solve(False)

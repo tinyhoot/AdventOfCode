@@ -1,8 +1,8 @@
 from utils.puzzles.numbers import Point
-from utils.solution import Solution
+from utils.solution import BaseSolution
 
 
-class Day08Solution(Solution):
+class Solution(BaseSolution):
 
     directions_nswe = (0, -1), (0, 1), (-1, 0), (1, 0)
 
@@ -58,5 +58,5 @@ class Day08Solution(Solution):
 
 
 if __name__ == "__main__":
-    solution = Day08Solution()
+    solution = Solution()
     solution.solve(False)

@@ -1,7 +1,7 @@
-from utils.solution import Solution
+from utils.solution import BaseSolution
 
 
-class Day03Solution(Solution):
+class Solution(BaseSolution):
 
     def _char_to_num(self, char: str) -> int:
         if char.islower():
@@ -39,5 +39,5 @@ class Day03Solution(Solution):
 
 
 if __name__ == "__main__":
-    solution = Day03Solution()
+    solution = Solution()
     solution.solve(False)

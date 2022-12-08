@@ -1,10 +1,10 @@
 import re
 
 from utils.puzzles.numbers import IntRange
-from utils.solution import Solution
+from utils.solution import BaseSolution
 
 
-class Day04Solution(Solution):
+class Solution(BaseSolution):
 
     def parse(self, raw: str):
         raw = raw.rstrip("\n")
@@ -36,5 +36,5 @@ class Day04Solution(Solution):
 
 
 if __name__ == "__main__":
-    solution = Day04Solution()
+    solution = Solution()
     solution.solve(False)
