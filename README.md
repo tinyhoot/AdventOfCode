@@ -1,17 +1,34 @@
 # Advent of Code 2022
 
 [Advent of Code](https://adventofcode.com/) is an annual coding advent calendar. This repository is intended as space
-for collecting and sharing my solutions. This year, I'll be attempting to solve things in Python.
+for collecting and sharing my solutions.
+
+My goal is to solve all puzzles in Python, and to use only modules from the standard library to do so.
 
 ## Executing the Code
 
-To run these solutions, `cd` to the root directory and run the solution file of a specific day.
+To run these solutions, `cd` to the root directory and run the following command to run the solution of the latest day.
 
 ```sh
-$ python3 2022/01/solution.py
+$ python3 main.py run
+```
+
+You can also select a specific day to run.
+
+```sh
+$ python3 main.py run 7
+```
+
+Appending the `-t` option lets the solution run on test input.
+
+```sh
+$ python3 main.py run -t
 ```
 
 ## Progress
+
+Note: The time to solution is not equivalent to the time taken to actually solve the problem. It is much more a measure
+of how soon I find the time to work on AoC.
 
 | Day | Time to Solution |   Stars   |
 |:---:|:----------------:|:---------:|
