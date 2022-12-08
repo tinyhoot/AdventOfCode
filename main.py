@@ -8,6 +8,11 @@ from utils import constants, filehandler
 _log = logging.getLogger(constants.ROOT_LOGGER)
 
 
+def _cli_next(args):
+    next_day = filehandler.get_latest_day(args.year) + 1
+    filehandler.setup_day(args.year, next_day)
+
+
 def _cli_run(args):
     run(2022, args.day, args.test_input)
 
@@ -16,6 +21,10 @@ def get_cli() -> ArgumentParser:
     """Get the command line interface for this project."""
     parser = ArgumentParser(description="Advent of Code")
     subparsers = parser.add_subparsers()
+
+    next_parser = subparsers.add_parser("next", help="create files for a new day")
+    next_parser.set_defaults(func=_cli_next)
+    next_parser.add_argument("year", nargs="?", type=int, default=2022, help="the year to create a new day for")
 
     run_parser = subparsers.add_parser("run", help="run the solution for a specific day")
     run_parser.set_defaults(func=_cli_run)

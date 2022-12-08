@@ -1,6 +1,7 @@
 # Anything to do with file handling inside the project directory goes here.
 import logging
 import os
+import shutil
 from pathlib import Path
 import re
 
@@ -75,6 +76,10 @@ def get_solution(year: int, day: int) -> Path:
     return get_day_dir(year, day) / SOLUTION_FILENAME
 
 
+def get_solution_template() -> Path:
+    return get_base_dir() / ".idea" / "fileTemplates" / "Advent of Code Template.py"
+
+
 def get_test_input(year: int, day: int) -> str:
     """Get the testing input for a specific day."""
     test_file = get_day_dir(year, day) / TEST_INPUT_FILENAME
@@ -138,6 +143,17 @@ def save_puzzle_input(data, year: int, day: int):
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(data)
     _log.info(f"Saved puzzle input to disk for {year}-{day}")
+
+
+def setup_day(year: int, day: int):
+    """Set up all the template files for the specific day and year."""
+    day_dir = get_day_dir(year, day)
+    if day_dir.exists():
+        raise ValueError(f"The directory for {year} Day {day} already exists!")
+    day_dir.mkdir(parents=True)
+    test_input = day_dir / TEST_INPUT_FILENAME
+    test_input.touch()
+    shutil.copy2(get_solution_template(), get_solution(year, day))
 
 
 def _url_to_filename(url: str) -> Path:
