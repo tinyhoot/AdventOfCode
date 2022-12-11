@@ -39,16 +39,18 @@ class Solution(BaseSolution):
     def part2(self, data):
         """Without decreasing worry levels, what is the level of monkey business after 10000 rounds?"""
         prime_mult = 1
+        # No decreasing levels means the numbers escalate out of control. Exploit modular arithmetic instead.
+        # Reducing worry sizes by the modulus of all divisors multiplied together yields the same results as the
+        # actual, massive numbers.
         for monkey in data:
             prime_mult *= monkey.test_div
+
         activity = [0 for _ in range(len(data))]
         for round in range(10000):
-            print(f"\r=== Round {round+1}", end="")
+            print(f"\r=== Round {round+1} ===", end="")
             for monkey in data:
                 activity[monkey.id] += len(monkey.items)
                 monkey.inspect(data, False, prime_mult)
-            if (round+1) % 1000 == 0 or round == 19 or round == 0:
-                print(f"\n{activity}")
 
         activity.sort(reverse=True)
         print("")
@@ -69,9 +71,11 @@ class Monkey:
         return f"Monkey {self.id}, {self.items}"
 
     def catch(self, item):
+        """Catch an item passed to this monkey by another monkey."""
         self.items.append(item)
 
     def inspect(self, monkeys: list["Monkey"], decrease_worry: bool = True, prime_mult: int = 0):
+        """Inspect an item and perform the specified operations on it."""
         while len(self.items) > 0:
             item = self.items.pop(0)
             # Prepare variable for the eval operation.
@@ -81,8 +85,7 @@ class Monkey:
             if decrease_worry:
                 item = item // 3
             else:
-                # Prevent multiplications by 0.
-                #if item % prime_mult != 0:
+                # Reduce by the product of the divisors of all monkeys.
                 item %= prime_mult
             self.throw(item, monkeys)
 
@@ -90,6 +93,7 @@ class Monkey:
         return item % self.test_div == 0
 
     def throw(self, item, monkeys: list["Monkey"]):
+        """Throw the item to a different monkey based on a testing criterium."""
         if self.test(item):
             monkeys[self.next[0]].catch(item)
         else:
