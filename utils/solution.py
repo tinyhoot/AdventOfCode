@@ -1,4 +1,5 @@
 # A base class for solutions during Advent of Code.
+import copy
 import logging
 import os
 from abc import ABCMeta, abstractmethod
@@ -43,9 +44,10 @@ class BaseSolution(metaclass=ABCMeta):
     def solve(self, testing: bool = True):
         raw = self._get_data(testing)
         data = self.parse(raw)
+        part1data = copy.deepcopy(data)
 
         self._log.info("---------- PART 1 OUTPUT ----------")
-        print(self.part1(data))
+        print(self.part1(part1data))
         self._log.info("---------- PART 2 OUTPUT ----------")
         print(self.part2(data))
 
