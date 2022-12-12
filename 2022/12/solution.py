@@ -1,10 +1,18 @@
+import random
 from collections import defaultdict
 
-from utils.puzzles.geometry import Grid
+from utils.puzzles.algorithms import dijkstra
+from utils.puzzles.geometry import Grid, Point
 from utils.solution import BaseSolution
 
 
 class Solution(BaseSolution):
+
+    def _get_distance(self, current: Point, neighbour: Point) -> float | None:
+        """Get the distance between two neighbouring nodes, or None if the path is impassable."""
+        if self.nodes[neighbour] - self.nodes[current] > 1:
+            return None
+        return 1
 
     def parse(self, raw: str):
         rows = raw.count("\n")
@@ -30,32 +38,11 @@ class Solution(BaseSolution):
         print("---")
         start = data.index(0)
         end = data.index(27)
-        step_size = 1
         print(f"Start: {start}\tEnd: {end}")
-        path = Grid(size=data.get_size(), default=-1)
-        path[start] = 0
+        self.nodes = data
+        path = dijkstra(data, start, end, self._get_distance)
 
-        # Approach: Assemble a list of which locations to explore next.
-        process_path = {start}
-        while len(process_path) > 0:
-            idx = process_path.pop()
-            print(f"Exploring {idx}")
-            neighbours = data.get_neighbours(idx)
-            for n in neighbours:
-                if abs(data[idx] - data[n]) <= step_size:
-                    # This neighbour is in range. Has it already been explored?
-                    if path[n] != -1 and (path[idx] == -1 or path[n] < path[idx]):
-                        # It has been explored and may be a shorter path to the current place.
-                        path[idx] = path[n] + 1
-                    else:
-                        # (Re-)explore this neighbour.
-                        process_path.add(n)
-            #print(path.pretty_print())
-            #print("---")
-            if idx == end:
-                break
-        print(path.pretty_print())
-        return path[end]
+        return path
 
     def part2(self, data):
         pass

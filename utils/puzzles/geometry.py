@@ -1,5 +1,69 @@
 # Classes which help with modeling geometry.
+from math import sqrt
 from typing import Sequence
+
+
+class Point:
+    """A point in a coordinate system."""
+
+    def __init__(self, x: int, y: int):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        if isinstance(other, type(self)):
+            return Point(self.x + other.x, self.y + other.y)
+        if isinstance(other, Sequence) and len(other) == 2:
+            return Point(self.x + other[0], self.y + other[1])
+        raise ValueError
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+
+    def __sub__(self, other):
+        if isinstance(other, type(self)):
+            return Point(self.x - other.x, self.y - other.y)
+        if isinstance(other, Sequence) and len(other) == 2:
+            return Point(self.x - other[0], self.y - other[1])
+        raise ValueError
+
+    def distance(self, other: "Point") -> float:
+        x = (self.x - other.x) ** 2
+        y = (self.y - other.y) ** 2
+        return sqrt(x + y)
+
+    def move(self, x=None, y=None, delta=None):
+        if x is not None or y is not None:
+            self.x += x if x is not None else 0
+            self.y += y if y is not None else 0
+            return
+        if isinstance(delta, type(self)):
+            self.x += delta.x
+            self.y += delta.y
+            return
+        if isinstance(delta, Sequence) and len(delta) == 2:
+            self.x += delta[0]
+            self.y += delta[1]
+            return
+        raise ValueError
+
+    def normalise(self, max: int = 1):
+        """Return a new point with this point's positions capped at 1."""
+        if self.x != 0:
+            x = self.x // abs(self.x) * max
+        else:
+            x = 0
+        if self.y != 0:
+            y = self.y // abs(self.y) * max
+        else:
+            y = 0
+        return Point(x, y)
+
+    def to_tuple(self) -> tuple[int, int]:
+        return self.x, self.y
 
 
 class Grid:
@@ -26,6 +90,8 @@ class Grid:
     def __getitem__(self, item):
         if isinstance(item, int):
             return self._values[item]
+        if isinstance(item, Point):
+            return self._values[item.y * self.num_cols + item.x]
         if isinstance(item, Sequence) and len(item) == 2:
             return self._values[item[0] * self.num_cols + item[1]]
         raise TypeError
@@ -33,6 +99,8 @@ class Grid:
     def __setitem__(self, key, value):
         if isinstance(key, int):
             self._values[key] = value
+        elif isinstance(key, Point):
+            self._values[key.y * self.num_cols + key.x] = value
         elif isinstance(key, Sequence) and len(key) == 2:
             self._values[key[0] * self.num_cols + key[1]] = value
         else:
@@ -51,31 +119,27 @@ class Grid:
         for row_idx in range(self.num_rows):
             yield [self._values[row_idx * self.num_cols + col_idx] for col_idx in range(self.num_cols)]
 
-    def get_neighbours(self, index):
+    def get_neighbours(self, idx: Point) -> list[Point]:
         """Get all neighbouring elements of the element at the given grid index in clockwise order."""
-        if not isinstance(index, Sequence) or len(index) != 2:
-            raise AttributeError("Index must be a tuple of size 2.")
-        row, col = index
         neighbours = []
-        if row > 0:
-            neighbours.append((row-1, col))
-        if col < self.num_cols - 1:
-            neighbours.append((row, col+1))
-        if row < self.num_rows - 1:
-            neighbours.append((row+1, col))
-        if col > 0:
-            neighbours.append((row, col-1))
+        if idx.y > 0:
+            neighbours.append(Point(idx.x, idx.y - 1))
+        if idx.x < self.num_cols - 1:
+            neighbours.append(Point(idx.x + 1, idx.y))
+        if idx.y < self.num_rows - 1:
+            neighbours.append(Point(idx.x, idx.y + 1))
+        if idx.x > 0:
+            neighbours.append(Point(idx.x - 1, idx.y))
         return neighbours
-
 
     def get_size(self) -> tuple[int, int]:
         """Get the number of rows and columns in the grid."""
         return self.num_rows, self.num_cols
 
-    def index(self, item) -> tuple[int, int]:
+    def index(self, item) -> Point:
         """Find the position of the given item."""
         idx = self._values.index(item)
-        return self._to_grid_idx(idx)
+        return self._to_point(idx)
 
     def pretty_print(self) -> str:
         """Get an easily printable version of the grid."""
@@ -93,11 +157,10 @@ class Grid:
         output = output.rstrip("\n")
         return output
 
-    def _to_grid_idx(self, index) -> tuple[int, int]:
+    def _to_point(self, index) -> Point:
         """Convert a values list index to its index in the grid."""
-        return index // self.num_cols, index % self.num_cols
+        return Point(index % self.num_cols, index // self.num_cols)
 
     def values(self):
         """Yield all values in the grid in one flat list."""
         yield from self._values
-

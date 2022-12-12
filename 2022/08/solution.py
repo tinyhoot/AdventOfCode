@@ -1,4 +1,4 @@
-from utils.puzzles.numbers import Point
+from utils.puzzles.geometry import Point
 from utils.solution import BaseSolution
 
 
