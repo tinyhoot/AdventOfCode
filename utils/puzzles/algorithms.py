@@ -32,5 +32,5 @@ def dijkstra(grid: Grid, start: Point, end: Point, distance_func: Callable[[Poin
         if nodes[current] == math.inf:
             break
 
-    print(nodes.pretty_print())
+    # print(nodes.pretty_print())
     return nodes[end]
