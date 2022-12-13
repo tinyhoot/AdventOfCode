@@ -6,35 +6,35 @@ class Solution(BaseSolution):
 
     def _compare(self, left_packet: list, right_packet: list) -> bool:
         """Compare two packets against each other. Returns true if they are in the right order."""
-        idx = 0
+        idx = -1
         while idx <= len(left_packet):
-            if len(left_packet) <= idx < len(right_packet):
-                print("Left packet is shorter than right!")
-                return True
-            if len(right_packet) <= idx < len(left_packet):
-                print("Right packet is shorter than left!")
-                return False
+            idx += 1
             if idx >= len(left_packet) and idx >= len(right_packet):
+                # We should only be reaching the end of both lists as part of an inconclusive sublist.
                 return None
+            if idx >= len(left_packet):
+                return True
+            if idx >= len(right_packet):
+                return False
+
             left = left_packet[idx]
             right = right_packet[idx]
             if isinstance(left, int) and isinstance(right, int):
-                print(f"Comparing {left} and {right}")
+                # Direct comparison is possible.
                 if left < right:
                     return True
                 if left > right:
                     return False
-            elif isinstance(left, int) and isinstance(right, list):
+                continue
+
+            if isinstance(left, int):
                 left = [left]
-            elif isinstance(left, list) and isinstance(right, int):
+            if isinstance(right, int):
                 right = [right]
-            if isinstance(left, list) and isinstance(right, list):
-                # Recurse.
-                print(f"Comparing sublists: {left}  vs  {right}")
-                result = self._compare(left, right)
-                if result is not None:
-                    return result
-            idx += 1
+            # Recurse into comparing sublists.
+            result = self._compare(left, right)
+            if result is not None:
+                return result
 
         raise RuntimeError
 
