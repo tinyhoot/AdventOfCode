@@ -43,8 +43,8 @@ of how soon I find the time to work on AoC.
 | [09](https://adventofcode.com/2022/day/9) | 04:50:56 | ✨✨ |
 | [10](https://adventofcode.com/2022/day/10) | 03:48:37 | ✨✨ |
 | [11](https://adventofcode.com/2022/day/11) | 06:11:35 | ✨✨ |
-| [12](https://adventofcode.com/2022/day/12) | N/A | - |
-| [13](https://adventofcode.com/2022/day/13) | N/A | - |
+| [12](https://adventofcode.com/2022/day/12) | 11:17:54 | ✨✨ |
+| [13](https://adventofcode.com/2022/day/13) | 02:51:42 | ✨✨ |
 | [14](https://adventofcode.com/2022/day/14) | N/A | - |
 | [15](https://adventofcode.com/2022/day/15) | N/A | - |
 | [16](https://adventofcode.com/2022/day/16) | N/A | - |

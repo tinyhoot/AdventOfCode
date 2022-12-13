@@ -1,5 +1,5 @@
 import math
-from typing import Callable
+from typing import Any, Callable
 
 from utils.puzzles.geometry import Grid, Point
 
@@ -34,3 +34,40 @@ def dijkstra(grid: Grid, start: Point, end: Point, distance_func: Callable[[Poin
 
     # print(nodes.pretty_print())
     return nodes[end]
+
+
+def _merge(left: list, right: list, comp_func: Callable[[Any, Any], bool]) -> list:
+    if len(left) == 0:
+        return right
+    if len(right) == 0:
+        return left
+
+    result = []
+    idx_l = idx_r = 0
+    # Iterate through both arrays until all elements are in the result.
+    while len(result) < len(left) + len(right):
+        # Choose the "smaller" element.
+        if comp_func(left[idx_l], right[idx_r]):
+            result.append(left[idx_l])
+            idx_l += 1
+        else:
+            result.append(right[idx_r])
+            idx_r += 1
+        # If the end of either array is reached, append the rest of the other.
+        if idx_l == len(left):
+            result += right[idx_r:]
+            break
+        if idx_r == len(right):
+            result += left[idx_l:]
+            break
+
+    return result
+
+
+def merge_sort(array: list, comparison_func: Callable[[Any, Any], bool]) -> list:
+    """Sort the given array using the MergeSort algorithm."""
+    if len(array) < 2:
+        return array
+    middle = len(array) // 2
+    # Sort the array by recursively splitting it in half, sorting those halves, and then merging them back together.
+    return _merge(merge_sort(array[:middle], comparison_func), merge_sort(array[middle:], comparison_func), comparison_func)
