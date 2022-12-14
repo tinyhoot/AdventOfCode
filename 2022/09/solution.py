@@ -17,9 +17,9 @@ class Solution(BaseSolution):
         x = abs(diff.x)
         y = abs(diff.y)
         if (x > 1 and y <= 1) or (x <= 1 and y > 1):
-            tail.move(delta=diff.normalise())
+            tail.move(delta=diff.signage())
         if x > 1 and y > 1:
-            tail.move(delta=diff.normalise())
+            tail.move(delta=diff.signage())
 
     def parse(self, raw: str):
         raw = raw.rstrip("\n")

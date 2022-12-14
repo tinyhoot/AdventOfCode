@@ -1,6 +1,6 @@
 # Classes which help with modeling geometry.
 from math import sqrt
-from typing import Sequence
+from typing import Any, Sequence
 
 
 class Point:
@@ -28,7 +28,10 @@ class Point:
             return Point(self.x - other.x, self.y - other.y)
         if isinstance(other, Sequence) and len(other) == 2:
             return Point(self.x - other[0], self.y - other[1])
-        raise ValueError
+        raise TypeError
+
+    def copy(self) -> "Point":
+        return Point(self.x, self.y)
 
     def distance(self, other: "Point") -> float:
         x = (self.x - other.x) ** 2
@@ -48,9 +51,9 @@ class Point:
             self.x += delta[0]
             self.y += delta[1]
             return
-        raise ValueError
+        raise TypeError
 
-    def normalise(self, max: int = 1):
+    def signage(self, max: int = 1):
         """Return a new point with this point's positions capped at 1."""
         if self.x != 0:
             x = self.x // abs(self.x) * max
@@ -64,6 +67,29 @@ class Point:
 
     def to_tuple(self) -> tuple[int, int]:
         return self.x, self.y
+
+
+class Line:
+    """A line in a coordinate system."""
+
+    def __init__(self, a: Point, b: Point):
+        self.a = a
+        self.b = b
+
+    def __iter__(self):
+        """Yield all points along the line."""
+        step = (self.b - self.a).signage()
+        current = self.a
+        yield self.a
+        while current != self.b:
+            current += step
+            yield current
+
+    def __len__(self):
+        return self.a.distance(self.b)
+
+    def __str__(self):
+        return f"({self.a.x},{self.a.y} -> {self.b.x},{self.b.y})"
 
 
 class Grid:
@@ -164,3 +190,29 @@ class Grid:
     def values(self):
         """Yield all values in the grid in one flat list."""
         yield from self._values
+
+
+class DictGrid:
+    """Emulate an infinite coordinate system."""
+
+    def __init__(self):
+        self._grid = {}
+
+    def __len__(self):
+        return len(self._grid)
+
+    def add_line(self, line: Line):
+        """Add a series of points to the grid."""
+        for point in line:
+            self._grid[point.to_tuple()] = 1
+
+    def add_point(self, point: Point, value: Any = 1):
+        """Add a point to the grid."""
+        self._grid[point.to_tuple()] = value
+
+    def get(self, point: Point | tuple[int, int]):
+        """Gets the value associated with the given point, or None if it does not exist."""
+        if isinstance(point, Point):
+            point = point.to_tuple()
+        return self._grid.get(point, None)
+
